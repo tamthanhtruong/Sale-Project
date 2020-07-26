@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { ProductTypeEnum } from '../../enum';
+import { ProductStatusEnum } from '../../enum';
 
 // Khai báo data cho mongoose
 export const ProductSchema = new mongoose.Schema({
@@ -25,9 +25,9 @@ export const ProductSchema = new mongoose.Schema({
   createdAt: { type: Number, default: Date.now },
   updatedAt: { type: Number, default: Date.now },
   status: {
-    type: Number,
-    enum: Object.values(ProductTypeEnum as object),
-    default: ProductTypeEnum.EXIST,
+    type: String,
+    enum: Object.values(ProductStatusEnum as object),
+    default: ProductStatusEnum.EXIST,
   },
   deletedAt: Number,
 });
@@ -45,6 +45,6 @@ export interface ProductInterface extends mongoose.Document {
   evaluation: string;
   updatedAt?: number;
   createdAt?: number;
-  status: number;
+  status: string;
   deletedAt?: number;
 }

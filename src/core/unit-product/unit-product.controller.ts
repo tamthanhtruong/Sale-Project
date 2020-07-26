@@ -1,5 +1,5 @@
 import { UnitProductService } from './unit-product.service';
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { UnitProductResponseInterface } from '../../interface/unit-product/unit-product.response';
 
 @Controller('unit-product')
@@ -8,20 +8,12 @@ export class UnitProductController {
 
   @Post()
   async create(@Body() name: string): Promise<UnitProductResponseInterface> {
-    try {
       return await this.service.create(name);
-    } catch(e) {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    }
   }
 
   @Get()
   async getAll(): Promise<UnitProductResponseInterface[]> {
-    try{
       return await this.service.getAll();
-    } catch(e) {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    }
   }
 
   @Get(':id')
@@ -29,16 +21,17 @@ export class UnitProductController {
     try {
       return await this.service.getSingle(id);
     } catch(e) {
-      throw new HttpException(`Not found Unit-Product ${id}`, HttpStatus.NOT_FOUND);
+      throw new HttpException(`Not found unitProductId ${id}`, HttpStatus.NOT_FOUND);
     }
+  }
+
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body('name') name: string): Promise<UnitProductResponseInterface> {
+    return await this.service.update(id, name);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<boolean> {
-    try {
       return await this.service.delete(id);
-    } catch(e) {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    }
   }
 }

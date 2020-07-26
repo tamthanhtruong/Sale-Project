@@ -6,6 +6,7 @@ export const UnitProductSchema = new mongoose.Schema({
     required: true,
     trim: String,
   },
+  // name: String,
   createdAt: { type: Number, default: Date.now },
   updatedAt: { type: Number, default: Date.now },
   deletedAt: Number,
@@ -14,7 +15,7 @@ export const UnitProductSchema = new mongoose.Schema({
 export interface UnitProductInterface extends mongoose.Document {
   readonly _id: string;
   name: string;
-  updatedAt?: number;
   createdAt?: number;
+  updatedAt?: number;
   deletedAt?: number;
 }

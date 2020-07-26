@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CategoryCreateRequest, CategoryUpdateRequest } from '../../../interface/product/category/category.request';
 import { CategoryInterface } from './category.model';
@@ -6,31 +6,34 @@ import { CategoryResponseInterface } from '../../../interface/product/category/c
 
 @Controller('category')
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(private readonly service: CategoryService) {}
 
   @Post()
-  async create(@Body() req: CategoryCreateRequest) {
-    const generateID = await this.categoryService.create(req.name);
-    return {id: generateID};
+  async create(@Body() req: CategoryCreateRequest): Promise<CategoryResponseInterface> {
+    return await this.service.create(req.name, req.status);
   }
 
   @Get()
   async getAll(): Promise<CategoryInterface[]> {
-    return await this.categoryService.getAll();
+    return await this.service.getAll();
   }
 
   @Get(':id')
   async getSingle(@Param('id') id: string): Promise<CategoryResponseInterface> {
-    return await this.categoryService.getSingle(id);
+    try {
+      return await this.service.getSingle(id);
+    } catch(e) {
+      throw new HttpException(`Not found categoryId ${id}`, HttpStatus.NOT_FOUND);
+    }
   }
 
   @Patch(':id')
   async update(@Body() req: CategoryUpdateRequest): Promise<CategoryResponseInterface> {
-    return await this.categoryService.update(req.id, req.name, req.status);
+    return await this.service.update(req.id, req.name, req.status);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<boolean> {
-    return await this.categoryService.delete(id);
+    return await this.service.delete(id);
   }
 }

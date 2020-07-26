@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { CategoryTypeEnum } from '../../../enum';
+import { CategoryStatusEnum } from '../../../enum';
 
 // Khai báo data cho mongoose
 export const CategorySchema = new mongoose.Schema({
@@ -7,9 +7,9 @@ export const CategorySchema = new mongoose.Schema({
   createdAt: { type: Number, default: Date.now },
   updatedAt: { type: Number, default: Date.now },
   status: {
-    type: Number,
-    enum: Object.values(CategoryTypeEnum as object),
-    default: CategoryTypeEnum.EXIST,
+    type: String,
+    enum: Object.values(CategoryStatusEnum as object),
+    default: CategoryStatusEnum.EXIST,
   },
   deletedAt: Number,
 });
@@ -20,6 +20,6 @@ export interface CategoryInterface extends mongoose.Document {
   name: string;
   createdAt?: number;
   updatedAt?: number;
-  status: number;
+  status: string;
   deletedAt?: number;
 }

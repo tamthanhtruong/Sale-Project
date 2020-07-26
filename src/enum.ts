@@ -1,9 +1,23 @@
-export enum CategoryTypeEnum {
-  EXIST = 1,
-  NO_EXIST = 2,
+export enum CategoryStatusEnum {
+  EXIST = 'Có',
+  NO_EXIST = 'Không',
 }
 
-export enum ProductTypeEnum {
-  EXIST = 1,
-  NO_EXIST = 2,
+export enum ProductStatusEnum {
+  EXIST = 'Có',
+  NO_EXIST = 'Không',
+}
+
+export enum UserStatusEnum {
+  ACTIVE = 'Active',
+  INACTIVE = 'Inactive',
+}
+export enum UserSexEnum {
+  MALE = 'Nam',
+  FEMALE = 'Nữ',
+}
+
+export enum RoleStatusEnum {
+  ACTIVE = 'Active',
+  INACTIVE = 'Inactive',
 }

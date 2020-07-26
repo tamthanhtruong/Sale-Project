@@ -11,7 +11,7 @@ export interface ProductResponseInterface {
   evaluation: string;
   updatedAt?: number;
   createdAt?: number;
-  status: number;
+  status: string;
   deletedAt?: number;
 }
 

@@ -8,6 +8,7 @@ export class ProductCreateRequest {
   image: string;
   information: string;
   evaluation: string;
+  status: string;
 }
 
 export class ProductUpdateRequest {
@@ -19,8 +20,5 @@ export class ProductUpdateRequest {
   image: string;
   information: string;
   evaluation: string;
-}
-
-export class ProductDeleteRequest {
-  id: string;
+  status: string;
 }
