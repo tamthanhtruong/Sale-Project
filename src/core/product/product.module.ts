@@ -11,5 +11,6 @@ import { UnitProductModule } from '../unit-product/unit-product.module';
   imports: [MongooseModule.forFeature([{name: 'Product', schema: ProductSchema}]), CategoryModule, UnitProductModule],
   controllers: [ProductController],
   providers: [ProductService],
+  exports: [ProductService],
 })
 export class ProductModule {}

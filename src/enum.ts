@@ -1,11 +1,11 @@
 export enum CategoryStatusEnum {
-  EXIST = 'Có',
-  NO_EXIST = 'Không',
+  EXIST = 'Exist',
+  NO_EXIST = 'No_exist',
 }
 
 export enum ProductStatusEnum {
-  EXIST = 'Có',
-  NO_EXIST = 'Không',
+  EXIST = 'Exist',
+  NO_EXIST = 'No_exist',
 }
 
 export enum UserStatusEnum {
@@ -13,11 +13,18 @@ export enum UserStatusEnum {
   INACTIVE = 'Inactive',
 }
 export enum UserSexEnum {
-  MALE = 'Nam',
-  FEMALE = 'Nữ',
+  MALE = 'Male',
+  FEMALE = 'Female',
 }
 
 export enum RoleStatusEnum {
   ACTIVE = 'Active',
   INACTIVE = 'Inactive',
+}
+
+export enum ImportStatusEnum {
+  LOCK ='Lock',
+  OPEN = 'Open',
+  PAID = 'Paid',
+  IMPORTED = 'Imported',
 }

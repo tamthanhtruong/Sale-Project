@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ProductInterface } from './product.model';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CategoryService } from './category/category.service';
 import { ProductResponseInterface } from '../../interface/product/product.response';
 import { UnitProductService } from '../unit-product/unit-product.service';
@@ -21,7 +21,7 @@ export class ProductService {
                 image: string,
                 information: string,
                 evaluation: string,
-                status?: string ): Promise<ProductResponseInterface> {
+                status: string ): Promise<ProductResponseInterface> {
 
     // Check Category is existing
     await this.categoryService.findId(categoryId);
@@ -50,7 +50,7 @@ export class ProductService {
                 image: string,
                 information: string,
                 evaluation: string,
-                status?: string): Promise<ProductResponseInterface> {
+                status: string): Promise<ProductResponseInterface> {
 
     // Find product document by id
     const findProduct = await this.model.findById(id);
@@ -77,5 +77,14 @@ export class ProductService {
     findProduct.deletedAt = Date.now();
     await findProduct.save();
     return true;
+  }
+
+  /* Additional functions */
+  async findId(id: string): Promise<ProductResponseInterface> {
+    // Find Import document by id
+    const productInfo = await this.model.findById(id);
+    if(!productInfo) throw new NotFoundException(`productInfo [${id}] not exist.`);
+
+    return productInfo;
   }
 }

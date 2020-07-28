@@ -1,6 +1,6 @@
 import { UserInterface } from './user.model';
 import { Model } from 'mongoose';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { RoleService } from './role/role.service';
 import { UserResponseInterface } from '../../interface/user/user.response';
@@ -67,5 +67,14 @@ export class UserService {
     findUser.deletedAt = Date.now();
     await findUser.save();
     return true;
+  }
+
+  /* Additional functions */
+  async findId(id: string): Promise<UserResponseInterface> {
+    // Find user document by id
+    const userInfo = await this.model.findById(id);
+    if(!userInfo) throw new NotFoundException(`userId [${id}] not exist.`);
+
+    return userInfo;
   }
 }

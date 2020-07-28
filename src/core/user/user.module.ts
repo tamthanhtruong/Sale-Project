@@ -9,5 +9,6 @@ import { RoleModule } from './role/role.module';
   imports: [MongooseModule.forFeature([{name: 'users', schema: UserSchema}]), RoleModule],
   controllers: [UserController],
   providers: [UserService],
+  exports: [UserService],
 })
 export class UserModule {}
