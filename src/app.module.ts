@@ -11,9 +11,20 @@ import { ImportModule } from './core/import/import.module';
 import { DetailImportModule } from './core/import/detail-import/detail-import.module';
 import { ExportModule } from './core/export/export.module';
 import { DetailExportModule } from './core/export/detail-export/detail-export.module';
+import { InventoryModule } from './core/inventory/inventory.module';
 
 @Module({
-  imports: [ProductModule, CategoryModule, UnitProductModule, UserModule, RoleModule, ImportModule, DetailImportModule, ExportModule, DetailExportModule, MongooseModule.forRoot('mongodb+srv://tam:5jZl42DhSE5FIe7i@cluster0-r8k78.mongodb.net/sale?retryWrites=true&w=majority'),],
+  imports: [ProductModule,
+            CategoryModule,
+            UnitProductModule,
+            UserModule,
+            RoleModule,
+            ImportModule,
+            DetailImportModule,
+            ExportModule,
+            DetailExportModule,
+            InventoryModule,
+            MongooseModule.forRoot('mongodb+srv://tam:5jZl42DhSE5FIe7i@cluster0-r8k78.mongodb.net/sale?retryWrites=true&w=majority'),],
   controllers: [AppController],
   providers: [AppService],
 })

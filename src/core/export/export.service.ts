@@ -2,8 +2,8 @@ import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestj
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from "mongoose";
 import { UserService } from '../user/user.service';
-import { ExportInterface } from './export.model';
 import { ExportResponseInterface } from '../../interface/export/export.response';
+import { ExportInterface } from './export.model';
 
 @Injectable()
 export class ExportService {
