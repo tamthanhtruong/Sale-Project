@@ -28,3 +28,10 @@ export enum ImportStatusEnum {
   PAID = 'Paid',
   IMPORTED = 'Imported',
 }
+
+export enum ExportStatusEnum {
+  LOCK ='Lock',
+  OPEN = 'Open',
+  PAID = 'Paid',
+  IMPORTED = 'Exported',
+}

@@ -1,5 +1,5 @@
-export class ImportCreateRequest {
-  shipper: string;
+export class ExportCreateRequest {
+  receiverId: string;
   invoiceNumber: number;
   note: string;
   createdUserId: string;
@@ -10,8 +10,8 @@ export class ImportCreateRequest {
   status: string;
 }
 
-export class ImportUpdateRequest {
-  shipper: string;
+export class ExportUpdateRequest {
+  receiverId: string;
   invoiceNumber: number;
   note: string;
   createdUserId: string;

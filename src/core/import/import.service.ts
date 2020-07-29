@@ -37,9 +37,9 @@ export class ImportService {
   }
 
   async getSingle(id: string): Promise<ImportResponseInterface> {
-      const gg = await this.model.findById(id);
-      if(!gg) throw new HttpException(`Not found importId ${id}`, HttpStatus.NOT_FOUND);
-      return gg
+      const importInfo = await this.model.findById(id);
+      if(!importInfo) throw new HttpException(`Not found importId ${id}`, HttpStatus.NOT_FOUND);
+      return importInfo;
   }
 
   async update(  id: string,
