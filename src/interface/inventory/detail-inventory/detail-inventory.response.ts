@@ -1,9 +1,8 @@
-export class DetailExportCreateRequest {
+export interface DetailInventoryResponseInterface {
   readonly _id: string;
-  exportId: string;
+  inventoryId: string;
   productId: string;
   unitProductId: string;
   quantity: number;
   price: number;
 }
-

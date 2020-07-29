@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post } from '@nestjs/common';
 import { DetailImportService } from './detail-import.service';
 import { DetailImportCreateRequest } from '../../../interface/import/detail-import/detail-import.request';
 import { DetailImportResponseInterface } from '../../../interface/import/detail-import/detail-import.response';
@@ -21,7 +21,11 @@ export class DetailImportController {
 
   @Get(':id')
   async getSingle(@Param('id') id: string) {
-    return await this.service.getSingle(id);
+    try {
+      return await this.service.getSingle(id);
+    } catch(e) {
+      throw new HttpException(`Not found detailImportId ${id}`, HttpStatus.NOT_FOUND);
+    }
   }
 
   @Delete(':id')

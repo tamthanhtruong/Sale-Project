@@ -1,8 +1,8 @@
 import * as mongoose from 'mongoose';
 
 // create schema Mongoose to map to Mongo collection
-export const DetailExportSchema = new mongoose.Schema({
-  exportId: String,
+export const DetailInventorySchema = new mongoose.Schema({
+  inventoryId: String,
   productId: String,
   unitProductId: String,
   quantity: Number,
@@ -11,9 +11,9 @@ export const DetailExportSchema = new mongoose.Schema({
 
 // Create model at Nestjs extends mongoose.Document -> Document at Mongo inject into it
 // Use this model -> create Document on Mongo
-export interface DetailExportInterface extends mongoose.Document {
+export interface DetailInventoryInterface extends mongoose.Document {
   readonly _id: string;
-  exportId: string;
+  inventoryId: string;
   productId: string;
   unitProductId: string;
   quantity: number;
