@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { DetailImportInterface } from './detail-import.model';
 import { Model } from 'mongoose';
@@ -20,16 +20,15 @@ export class DetailImportService {
     try {
       // Find Detail-Import document by id
       detailDoc = await this.model.findById(id).exec();
-    } catch(error) {
+    } catch(e) {
       throw new NotFoundException('Could not find product.'); // 404
     }
-    if(!detailDoc) {
-      throw new NotFoundException('Could not find product.'); // 404
-    }
+    if(!detailDoc) throw new NotFoundException('Could not find product.'); // 404
+
     return detailDoc;
   }
 
-  /* Main function */
+  /* Main functions */
   async create( importId: string, productId: string, unitProductId: string, quantity: number, price: number): Promise<DetailImportResponseInterface> {
     // Check Import is existing
     await this.importService.findImport(importId);
@@ -37,33 +36,49 @@ export class DetailImportService {
     await this.productService.findProduct(productId);
     // Check Unit-Product is existing
     await this.unitProductService.findUnitProduct(unitProductId);
-    // Create new import document
-    const newDetail = new this.model({importId, productId, unitProductId, quantity, price});
-    return await newDetail.save();
+    try {
+      // Create new import document
+      const newDetail = new this.model({importId, productId, unitProductId, quantity, price});
+      return await newDetail.save();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getAll(): Promise<DetailImportInterface[]> {
-    // Find documents
-    return await this.model.find().exec();
+    try {
+      // Find documents
+      return await this.model.find().exec();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getSingle(id: string): Promise<DetailImportResponseInterface> {
-    // Find detail-import document by id
-    return await this.findDetail(id);
+      // Find detail-import document by id
+      return await this.findDetail(id);
   }
 
   async delete(id: string): Promise<boolean> {
     // Check import is existing
     await this.findDetail(id);
-    // Then delete
-    await this.model.deleteOne({_id: id}).exec();
-    return true;
+    try {
+      // Then delete
+      await this.model.deleteOne({_id: id}).exec();
+      return true;
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getDetail(importId: string): Promise<DetailImportInterface[]> {
     // Check Import is existing
     await this.importService.findImport(importId);
-    // Then find documents that same importId
-    return await this.model.find({ importId : importId }).exec();
+    try {
+      // Then find documents that same importId
+      return await this.model.find({ importId : importId }).exec();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 }

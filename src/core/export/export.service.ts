@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from "mongoose";
 import { UserService } from '../user/user.service';
@@ -16,16 +16,15 @@ export class ExportService {
     try {
       // Find Export document by id
       exportDoc = await this.model.findById(id).exec();
-    } catch(error) {
+    } catch(e) {
       throw new NotFoundException('Could not find export.'); // 404
     }
-    if(!exportDoc) {
-      throw new NotFoundException('Could not find export.'); // 404
-    }
+    if(!exportDoc) throw new NotFoundException('Could not find export.'); // 404
+
     return exportDoc;
   }
 
-  /* Main function */
+  /* Main functions */
   async create( receiverId: string,
                 invoiceNumber: number,
                 note: string,
@@ -44,19 +43,27 @@ export class ExportService {
     await this.userService.findUser(accountantUserId);
     // Check stockkeeperUser is existing
     await this.userService.findUser(stockkeeperUserId);
-    // Create new import document
-    const newExport = new this.model({receiverId,invoiceNumber,note,createdUserId,accountantUserId,accConfirmedDate,stockkeeperUserId,stockConfirmedDate,status});
-    return await newExport.save();
+    try {
+      // Create new import document
+      const newExport = new this.model({receiverId,invoiceNumber,note,createdUserId,accountantUserId,accConfirmedDate,stockkeeperUserId,stockConfirmedDate,status});
+      return await newExport.save();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getAll(): Promise<ExportInterface[]> {
-    // Find documents
-    return await this.model.find().exec();
+    try {
+      // Find documents
+      return await this.model.find().exec();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getSingle(id: string): Promise<ExportResponseInterface> {
-    // Finds a single document by id
-    return await this.findExport(id);
+      // Finds a single document by id
+      return await this.findExport(id);
   }
 
   async update(  id: string,
@@ -80,28 +87,35 @@ export class ExportService {
     await this.userService.findUser(accountantUserId);
     // Check stockkeeperUser is existing
     await this.userService.findUser(stockkeeperUserId);
+    try {
+      // Then update
+      exportDoc.receiverId = receiverId;
+      exportDoc.invoiceNumber = invoiceNumber;
+      exportDoc.note = note;
+      exportDoc.createdUserId = createdUserId;
+      exportDoc.accountantUserId = accountantUserId;
+      exportDoc.accConfirmedDate = accConfirmedDate;
+      exportDoc.stockkeeperUserId = stockkeeperUserId;
+      exportDoc.stockConfirmedDate = stockConfirmedDate;
+      exportDoc.status = status;
+      exportDoc.updatedAt = Date.now();
 
-    // Then update
-    exportDoc.receiverId = receiverId;
-    exportDoc.invoiceNumber = invoiceNumber;
-    exportDoc.note = note;
-    exportDoc.createdUserId = createdUserId;
-    exportDoc.accountantUserId = accountantUserId;
-    exportDoc.accConfirmedDate = accConfirmedDate;
-    exportDoc.stockkeeperUserId = stockkeeperUserId;
-    exportDoc.stockConfirmedDate = stockConfirmedDate;
-    exportDoc.status = status;
-    exportDoc.updatedAt = Date.now();
-
-    return await exportDoc.save();
+      return await exportDoc.save();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async delete(id: string): Promise<boolean> {
     // Find export document by id
     const exportDoc =  await this.findExport(id);
-    // Add deletedAt field
-    exportDoc.deletedAt = Date.now();
-    await exportDoc.save();
-    return true;
+    try {
+      // Add deletedAt field
+      exportDoc.deletedAt = Date.now();
+      await exportDoc.save();
+      return true;
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 }

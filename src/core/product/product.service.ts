@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ProductInterface } from './product.model';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CategoryService } from './category/category.service';
 import { ProductResponseInterface } from '../../interface/product/product.response';
 import { UnitProductService } from '../unit-product/unit-product.service';
@@ -18,16 +18,15 @@ export class ProductService {
     try {
       // Find Product document by id
       productDoc = await this.model.findById(id).exec();
-    } catch(error) {
+    } catch(e) {
       throw new NotFoundException('Could not find product.'); // 404
     }
-    if(!productDoc) {
-      throw new NotFoundException('Could not find product.'); // 404
-    }
+    if(!productDoc) throw new NotFoundException('Could not find product.'); // 404
+
     return productDoc;
   }
 
-  /* Main function */
+  /* Main functions */
   async create( categoryId: string,
                 unitProductId: string,
                 name: string,
@@ -44,18 +43,26 @@ export class ProductService {
     // Check Unit-Product is existing
     await this.unitProductService.findUnitProduct(unitProductId);
     // Create the new product
-    const newProduct = new this.model({categoryId, unitProductId, name, code, originPrice, price, image, information, evaluation, status});
-    return await newProduct.save();
+    try {
+      const newProduct = new this.model({categoryId, unitProductId, name, code, originPrice, price, image, information, evaluation, status});
+      return await newProduct.save();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getAll(): Promise<ProductInterface[]> {
-    // Find documents
-    return await this.model.find().exec();
+    try {
+      // Find documents
+      return await this.model.find().exec();
+    } catch (e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getSingle(id: string): Promise<ProductResponseInterface> {
-    // Finds a single document by id
-    return await this.findProduct(id);
+      // Finds a single document by id
+      return await this.findProduct(id);
   }
 
   async update( id: string,
@@ -70,26 +77,35 @@ export class ProductService {
 
     // Find product document by id
     const product = await this.findProduct(id);
-    // Then update
-    product.categoryId = categoryId;
-    product.unitProductId = unitProductId;
-    product.originPrice = originPrice;
-    product.price = price;
-    product.image = image;
-    product.information = information;
-    product.evaluation = evaluation;
-    product.status = status;
-    product.updatedAt = Date.now();
+    try {
+      // Then update
+      product.categoryId = categoryId;
+      product.unitProductId = unitProductId;
+      product.originPrice = originPrice;
+      product.price = price;
+      product.image = image;
+      product.information = information;
+      product.evaluation = evaluation;
+      product.status = status;
+      product.updatedAt = Date.now();
 
-    return await product.save();
+      return await product.save();
+    } catch (e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
+
   }
 
   async delete(id: string): Promise<boolean> {
     // Find product document by id
     const product = await this.findProduct(id);
-    // Add deletedAt field
-    product.deletedAt = Date.now();
-    await product.save();
-    return true;
+    try {
+      // Add deletedAt field
+      product.deletedAt = Date.now();
+      await product.save();
+      return true;
+    } catch (e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 }

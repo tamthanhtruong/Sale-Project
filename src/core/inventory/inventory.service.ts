@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from "mongoose";
 import { UserService } from '../user/user.service';
@@ -16,16 +16,15 @@ export class InventoryService {
     try {
       // Find Inventory document by id
       inventoryDoc = await this.model.findById(id).exec();
-    } catch(error) {
+    } catch(e) {
       throw new NotFoundException('Could not find inventory.'); // 404
     }
-    if(!inventoryDoc) {
-      throw new NotFoundException('Could not find inventory.'); // 404
-    }
+    if(!inventoryDoc) throw new NotFoundException('Could not find inventory.'); // 404
+
     return inventoryDoc;
   }
 
-  /* Main function */
+  /* Main functions */
   async create( invoiceNumber: number,
                 note: string,
                 createdUserId: string,
@@ -33,19 +32,27 @@ export class InventoryService {
 
     // Check createdUser is existing
     await this.userService.findUser(createdUserId);
-    // Create new inventory document
-    const newInventory = new this.model({invoiceNumber,note,createdUserId,status});
-    return await newInventory.save();
+    try {
+      // Create new inventory document
+      const newInventory = new this.model({invoiceNumber,note,createdUserId,status});
+      return await newInventory.save();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getAll(): Promise<InventoryInterface[]> {
-    // Find documents
-    return await this.model.find().exec();
+    try {
+      // Find documents
+      return await this.model.find().exec();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getSingle(id: string): Promise<InventoryResponseInterface> {
-    // Finds a single document by id
-    return await this.findInventory(id);
+      // Finds a single document by id
+      return await this.findInventory(id);
   }
 
   async update(  id: string,
@@ -58,25 +65,30 @@ export class InventoryService {
     const findInventory = await this.findInventory(id);
     // Check createdUser is existing
     await this.userService.findUser(createdUserId);
+    try {
+      // Then update
+      findInventory.invoiceNumber = invoiceNumber;
+      findInventory.note = note;
+      findInventory.createdUserId = createdUserId;
+      findInventory.status = status;
+      findInventory.updatedAt = Date.now();
 
-    // Then update
-    findInventory.invoiceNumber = invoiceNumber;
-    findInventory.note = note;
-    findInventory.createdUserId = createdUserId;
-    findInventory.status = status;
-    findInventory.updatedAt = Date.now();
-
-    return await findInventory.save();
+      return await findInventory.save();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async delete(id: string): Promise<boolean> {
     // Find inventory document by id
     const findInventory =  await this.findInventory(id);
-    // Add deletedAt field
-    findInventory.deletedAt = Date.now();
-    await findInventory.save();
-    return true;
+    try {
+      // Add deletedAt field
+      findInventory.deletedAt = Date.now();
+      await findInventory.save();
+      return true;
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
-
-
 }

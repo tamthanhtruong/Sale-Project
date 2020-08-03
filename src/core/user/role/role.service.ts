@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { RoleInterface } from './role.model';
 import { Model } from 'mongoose';
@@ -15,50 +15,65 @@ export class RoleService {
     try {
       // Find Role document by id
       roleDoc = await this.model.findById(id).exec();
-    } catch(error) {
+    } catch(e) {
       throw new NotFoundException('Could not find role.'); // 404
     }
-    if(!roleDoc) {
-      throw new NotFoundException('Could not find role.'); // 404
-    }
+    if(!roleDoc) throw new NotFoundException('Could not find role.'); // 404
+
     return roleDoc;
   }
 
-  /* Main function */
+  /* Main functions */
   async create(name: string, description: string, status: string): Promise<RoleResponseInterface> {
-    // Create the new role
-    const newRole = new this.model({name, description, status});
-    return await newRole.save();
+    try {
+      // Create the new role
+      const newRole = new this.model({name, description, status});
+      return await newRole.save();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getAll(): Promise<RoleInterface[]> {
-    // Find documents
-    return await this.model.find().exec();
+    try {
+      // Find documents
+      return await this.model.find().exec();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getSingle(id: string): Promise<RoleResponseInterface> {
-    // Finds a single document by id
-    return this.findRole(id);
+      // Finds a single document by id
+      return await this.findRole(id);
   }
 
   async update(id: string, name:string, description: string, status: string): Promise<RoleResponseInterface> {
     // Find role document by id
     const role = await this.findRole(id);
-    // Then update
-    role.name = name;
-    role.description = description;
-    role.status = status;
-    role.updatedAt = Date.now();
+    try {
+      // Then update
+      role.name = name;
+      role.description = description;
+      role.status = status;
+      role.updatedAt = Date.now();
 
-    return await role.save();
+      return await role.save();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async delete(id: string): Promise<boolean> {
     // Find role document by id
     const role = await this.findRole(id);
-    // Add deletedAt property
-    role.deletedAt = Date.now();
-    await role.save();
-    return true;
+    try {
+      // Add deletedAt property
+      role.deletedAt = Date.now();
+      await role.save();
+      return true;
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 }

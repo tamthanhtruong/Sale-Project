@@ -1,6 +1,6 @@
 import { UserInterface } from './user.model';
 import { Model } from 'mongoose';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { RoleService } from './role/role.service';
 import { UserResponseInterface } from '../../interface/user/user.response';
@@ -16,32 +16,39 @@ export class UserService {
     try {
       // Find User document by id
       userDoc = await this.model.findById(id).exec();
-    } catch(error) {
+    } catch(e) {
       throw new NotFoundException('Could not find user.'); // 404
     }
-    if(!userDoc) {
-      throw new NotFoundException('Could not find user.'); // 404
-    }
+    if(!userDoc) throw new NotFoundException('Could not find user.'); // 404
+
     return userDoc;
   }
 
-  /* Main function */
+  /* Main functions */
   async create(roleId, account, password, name, sex, email, dateOfBirth, address, phone, status): Promise<UserResponseInterface> {
     // Check roleId is existing
     await this.roleService.findRole(roleId);
-    // Create the new user
-    const newUser = new this.model({roleId, account, password, name, sex, email, dateOfBirth, address, phone, status});
-    return await newUser.save();
+    try {
+      // Create the new user
+      const newUser = new this.model({roleId, account, password, name, sex, email, dateOfBirth, address, phone, status});
+      return await newUser.save();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getAll(): Promise<UserInterface[]> {
-    // Find documents
-    return await this.model.find().exec();
+    try {
+      // Find documents
+      return await this.model.find().exec();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getSingle(id: string): Promise<UserResponseInterface> {
-    // Finds a single document by id
-    return await this.findUser(id);
+      // Finds a single document by id
+      return await this.findUser(id);
   }
 
   async update( id:string,
@@ -58,28 +65,36 @@ export class UserService {
 
     //Find user document by id
     const user = await this.findUser(id);
-    // Then update
-    user.roleId = roleId;
-    user.account = account;
-    user.password = password;
-    user.name = name;
-    user.sex = sex;
-    user.email = email;
-    user.dateOfBirth = dateOfBirth;
-    user.address = address;
-    user.phone = phone;
-    user.status = status;
-    user.updatedAt = Date.now();
+    try {
+      // Then update
+      user.roleId = roleId;
+      user.account = account;
+      user.password = password;
+      user.name = name;
+      user.sex = sex;
+      user.email = email;
+      user.dateOfBirth = dateOfBirth;
+      user.address = address;
+      user.phone = phone;
+      user.status = status;
+      user.updatedAt = Date.now();
 
-    return await user.save();
+      return await user.save();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async delete(id: string): Promise<boolean> {
     // Find user document by id
     const user = await this.findUser(id);
-    // Add deletedAt field
-    user.deletedAt = Date.now();
-    await user.save();
-    return true;
+    try {
+      // Add deletedAt field
+      user.deletedAt = Date.now();
+      await user.save();
+      return true;
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 }

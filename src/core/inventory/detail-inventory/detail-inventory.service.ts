@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UnitProductService } from '../../unit-product/unit-product.service';
@@ -20,16 +20,15 @@ export class DetailInventoryService {
     try {
       // Find Detail-Inventory document by id
       detailDoc = await this.model.findById(id).exec();
-    } catch(error) {
+    } catch(e) {
       throw new NotFoundException('Could not find product.'); // 404
     }
-    if(!detailDoc) {
-      throw new NotFoundException('Could not find product.'); // 404
-    }
+    if(!detailDoc) throw new NotFoundException('Could not find product.'); // 404
+
     return detailDoc;
   }
 
-  /* Main function */
+  /* Main functions */
   async create( inventoryId: string, productId: string, unitProductId: string, quantity: number, price: number): Promise<DetailInventoryResponseInterface> {
     // Check Inventory is existing
     await this.inventoryService.findInventory(inventoryId);
@@ -37,33 +36,49 @@ export class DetailInventoryService {
     await this.productService.findProduct(productId);
     // Check Unit-Product is existing
     await this.unitProductService.findUnitProduct(unitProductId);
-    // Create new inventory document
-    const newDetail = new this.model({inventoryId, productId, unitProductId, quantity, price});
-    return await newDetail.save();
+    try {
+      // Create new inventory document
+      const newDetail = new this.model({inventoryId, productId, unitProductId, quantity, price});
+      return await newDetail.save();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getAll(): Promise<DetailInventoryInterface[]> {
-    // Find documents
-    return await this.model.find().exec();
+    try {
+      // Find documents
+      return await this.model.find().exec();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getSingle(id: string): Promise<DetailInventoryResponseInterface> {
-    // Find detail-inventory document by id
-    return this.findDetail(id);
+      // Find detail-inventory document by id
+      return await this.findDetail(id);
   }
 
   async delete(id: string): Promise<boolean> {
     // Check inventory is existing
     await this.findDetail(id);
-    // Then delete
-    await this.model.deleteOne({_id: id}).exec();
-    return true;
+    try {
+      // Then delete
+      await this.model.deleteOne({_id: id}).exec();
+      return true;
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getDetail(inventoryId: string): Promise<DetailInventoryInterface[]> {
     // Check inventory is existing
     await this.inventoryService.findInventory(inventoryId);
-    // Then find documents that same inventoryId
-    return await this.model.find({ inventoryId : inventoryId }).exec();
+    try {
+      // Then find documents that same inventoryId
+      return await this.model.find({ inventoryId : inventoryId }).exec();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 }

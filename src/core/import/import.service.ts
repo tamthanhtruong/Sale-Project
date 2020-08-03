@@ -1,6 +1,6 @@
 import { ImportInterface } from './import.model';
 import { Model } from 'mongoose';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserService } from '../user/user.service';
 import { ImportResponseInterface } from '../../interface/import/import.response';
@@ -16,16 +16,15 @@ export class ImportService {
     try {
       // Find Import document by id
       importDoc = await this.model.findById(id).exec();
-    } catch(error) {
+    } catch(e) {
       throw new NotFoundException('Could not find import.'); // 404
     }
-    if(!importDoc) {
-      throw new NotFoundException('Could not find import.'); // 404
-    }
+    if(!importDoc) throw new NotFoundException('Could not find import.'); // 404
+
     return importDoc;
   }
 
-  /* Main function */
+  /* Main functions */
   async create( shipper: string,
                 invoiceNumber: number,
                 note: string,
@@ -42,19 +41,27 @@ export class ImportService {
     await this.userService.findUser(accountantUserId);
     // Check stockkeeperUser is existing
     await this.userService.findUser(stockkeeperUserId);
-    // Create new import document
-    const newImport = new this.model({shipper,invoiceNumber,note,createdUserId,accountantUserId,accConfirmedDate,stockkeeperUserId,stockConfirmedDate,status});
-    return await newImport.save();
+    try {
+      // Create new import document
+      const newImport = new this.model({shipper,invoiceNumber,note,createdUserId,accountantUserId,accConfirmedDate,stockkeeperUserId,stockConfirmedDate,status});
+      return await newImport.save();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getAll(): Promise<ImportInterface[]> {
-    // Find documents
-    return await this.model.find().exec();
+    try {
+      // Find documents
+      return await this.model.find().exec();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async getSingle(id: string): Promise<ImportResponseInterface> {
-    // Finds a single document by id
-    return await this.findImport(id);
+      // Finds a single document by id
+      return await this.findImport(id);
   }
 
   async update(  id: string,
@@ -76,29 +83,35 @@ export class ImportService {
     await this.userService.findUser(accountantUserId);
     // Check stockkeeperUser is existing
     await this.userService.findUser(stockkeeperUserId);
+    try {
+      // Then update
+      importDoc.shipper = shipper;
+      importDoc.invoiceNumber = invoiceNumber;
+      importDoc.note = note;
+      importDoc.createdUserId = createdUserId;
+      importDoc.accountantUserId = accountantUserId;
+      importDoc.accConfirmedDate = accConfirmedDate;
+      importDoc.stockkeeperUserId = stockkeeperUserId;
+      importDoc.stockConfirmedDate = stockConfirmedDate;
+      importDoc.status = status;
+      importDoc.updatedAt = Date.now();
 
-    // Then update
-    importDoc.shipper = shipper;
-    importDoc.invoiceNumber = invoiceNumber;
-    importDoc.note = note;
-    importDoc.createdUserId = createdUserId;
-    importDoc.accountantUserId = accountantUserId;
-    importDoc.accConfirmedDate = accConfirmedDate;
-    importDoc.stockkeeperUserId = stockkeeperUserId;
-    importDoc.stockConfirmedDate = stockConfirmedDate;
-    importDoc.status = status;
-    importDoc.updatedAt = Date.now();
-
-    return await importDoc.save();
+      return await importDoc.save();
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
 
   async delete(id: string): Promise<boolean> {
     // Find import document by id
     const importDoc =  await this.findImport(id);
-    // Add deletedAt field
-    importDoc.deletedAt = Date.now();
-    await importDoc.save();
-    return true;
+    try {
+      // Add deletedAt field
+      importDoc.deletedAt = Date.now();
+      await importDoc.save();
+      return true;
+    } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
   }
-
 }
