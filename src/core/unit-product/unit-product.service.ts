@@ -7,7 +7,7 @@ import { UnitProductResponseInterface } from '../../interface/unit-product/unit-
 @Injectable()
 export class UnitProductService {
 
-  constructor(@InjectModel('Unit-Product') private readonly model: Model<UnitProductInterface>) {}
+  constructor(@InjectModel('unit-products') private readonly model: Model<UnitProductInterface>) {}
 
   /* Additional functions */
   async findUnitProduct(id: string): Promise<UnitProductInterface> {
@@ -41,7 +41,7 @@ export class UnitProductService {
   async getAll(): Promise<UnitProductResponseInterface[]> {
     try {
       // Find documents
-      return await this.model.find().exec();
+      return await this.model.find({ deletedAt: null }).exec();
     } catch(e) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
@@ -75,6 +75,14 @@ export class UnitProductService {
       await unitProduct.save();
       return true;
     } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
+  }
+
+  async getAllSoftDelete(): Promise<UnitProductResponseInterface[]> {
+    try {
+      return await this.model.find({ deletedAt : { $ne: null } }).exec();
+    } catch (e) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
   }

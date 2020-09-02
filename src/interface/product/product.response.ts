@@ -9,8 +9,8 @@ export interface ProductResponseInterface {
   image: string;
   information: string;
   evaluation: string;
-  updatedAt?: number;
   createdAt?: number;
+  updatedAt?: number;
   status: string;
   deletedAt?: number;
 }

@@ -36,7 +36,7 @@ export class ExportService {
                 accConfirmedDate: number,
                 stockKeeperUserId: string,
                 stockConfirmedDate: number,
-                status: string) {
+                status: string): Promise<ExportResponseInterface> {
 
     try {
       // Create new import document
@@ -47,10 +47,10 @@ export class ExportService {
     }
   }
 
-  async getAll(): Promise<ExportInterface[]> {
+  async getAll(): Promise<ExportResponseInterface[]> {
     try {
       // Find documents
-      return await this.model.find().exec();
+      return await this.model.find({ deletedAt: null }).exec();
     } catch(e) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
@@ -105,4 +105,127 @@ export class ExportService {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
   }
+
+  async getAllSoftDelete(): Promise<ExportResponseInterface[]> {
+    try {
+      return await this.model.find({ deletedAt : { $ne: null } }).exec();
+    } catch (e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
+  }
+
+  async realDummyData() {
+    const arrData = [
+      {
+        "receiver" : "Hoa",
+        "invoiceNumber" : 3,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e54",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e54",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e54",
+        "stockConfirmedDate" : 2020,
+        "status" : "Lock"
+      }, {
+        "receiver" : "Tim",
+        "invoiceNumber" : 3,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e56",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e56",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e56",
+        "stockConfirmedDate" : 2020,
+        "status" : "Lock"
+      }, {
+        "receiver" : "Lan",
+        "invoiceNumber" : 3,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e57",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e57",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e57",
+        "stockConfirmedDate" : 2020,
+        "status" : "Lock"
+      }, {
+        "receiver" : "Hồng",
+        "invoiceNumber" : 3,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e57",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e57",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e57",
+        "stockConfirmedDate" : 2020,
+        "status" : "Lock"
+      }, {
+        "receiver" : "Đào",
+        "invoiceNumber" : 3,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e57",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e57",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e57",
+        "stockConfirmedDate" : 2020,
+        "status" : "Lock"
+      }, {
+        "receiver" : "Kim",
+        "invoiceNumber" : 3,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e58",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e58",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e58",
+        "stockConfirmedDate" : 2020,
+        "status" : "Lock"
+      }, {
+        "receiver" : "Hạnh",
+        "invoiceNumber" : 3,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e58",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e58",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e58",
+        "stockConfirmedDate" : 2020,
+        "status" : "Lock"
+      }, {
+        "receiver" : "Ngọc",
+        "invoiceNumber" : 3,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e59",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e59",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e59",
+        "stockConfirmedDate" : 2020,
+        "status" : "Lock"
+      }, {
+        "receiver" : "Hoa",
+        "invoiceNumber" : 3,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e59",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e59",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e59",
+        "stockConfirmedDate" : 2020,
+        "status" : "Lock"
+      }, {
+        "receiver" : "Long",
+        "invoiceNumber" : 3,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e59",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e59",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e59",
+        "stockConfirmedDate" : 2020,
+        "status" : "Lock"
+      }
+    ];
+    let i = 0;
+    while(i<10) {
+      await this.model.insertMany(arrData, function(err) {
+        if(err) throw err;
+      });
+      i++;
+    }
+
+    return true;
+  };
 }

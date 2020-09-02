@@ -38,10 +38,10 @@ export class RoleService {
     }
   }
 
-  async getAll(): Promise<RoleInterface[]> {
+  async getAll(): Promise<RoleResponseInterface[]> {
     try {
       // Find documents
-      return await this.model.find().exec();
+      return await this.model.find({ deletedAt: null }).exec();
     } catch(e) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
@@ -77,6 +77,14 @@ export class RoleService {
       await role.save();
       return true;
     } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
+  }
+
+  async getAllSoftDelete(): Promise<RoleResponseInterface[]> {
+    try {
+      return await this.model.find({ deletedAt : { $ne: null } }).exec();
+    } catch (e) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
   }

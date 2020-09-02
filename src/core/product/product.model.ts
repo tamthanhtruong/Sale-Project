@@ -1,4 +1,4 @@
-import * as mongoose from "mongoose";
+import * as mongoose from 'mongoose';
 import { ProductStatusEnum } from '../../enums/enum';
 
 export const ProductSchema = new mongoose.Schema({
@@ -40,8 +40,13 @@ export interface ProductInterface extends mongoose.Document {
   image: string;
   information: string;
   evaluation: string;
-  updatedAt?: number;
   createdAt?: number;
+  updatedAt?: number;
   status: string;
   deletedAt?: number;
 }
+
+// export const productModel = mongoose.model('Product', ProductSchema);
+// module.exports = new mongoose.model('Product', ProductSchema);
+
+// module.exports = productModel;

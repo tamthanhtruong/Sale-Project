@@ -7,7 +7,6 @@ import {
 } from '../../../interface/user/role/role.request';
 import { RoleService } from './role.service';
 import { RoleResponseInterface } from '../../../interface/user/role/role.response';
-import { RoleInterface } from './role.model';
 
 @Controller('role')
 export class RoleController {
@@ -19,7 +18,7 @@ export class RoleController {
   }
 
   @Get()
-  async getAll(): Promise<RoleInterface[]> {
+  async getAll(): Promise<RoleResponseInterface[]> {
     return await this.service.getAll();
   }
 
@@ -36,5 +35,10 @@ export class RoleController {
   @Delete(':id')
   async delete(@Param() req: RoleDeleteRequest): Promise<boolean> {
     return await this.service.delete(req.id);
+  }
+
+  @Get('get-all/soft-deleted')
+  async getAllSoftDelete(): Promise<RoleResponseInterface[]> {
+    return await this.service.getAllSoftDelete();
   }
 }

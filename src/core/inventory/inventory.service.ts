@@ -31,7 +31,7 @@ export class InventoryService {
   async create( invoiceNumber: number,
                 note: string,
                 createdUserId: string,
-                status: string ) {
+                status: string ): Promise<InventoryResponseInterface> {
     try {
       // Create new inventory document
       const newInventory = new this.model({invoiceNumber,note,createdUserId,status});
@@ -41,10 +41,10 @@ export class InventoryService {
     }
   }
 
-  async getAll(): Promise<InventoryInterface[]> {
+  async getAll(): Promise<InventoryResponseInterface[]> {
     try {
       // Find documents
-      return await this.model.find().exec();
+      return await this.model.find({ deletedAt: null }).exec();
     } catch(e) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
@@ -89,4 +89,77 @@ export class InventoryService {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
   }
+
+  async getAllSoftDelete(): Promise<InventoryResponseInterface[]> {
+    try {
+      return await this.model.find({ deletedAt : { $ne: null } }).exec();
+    } catch (e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
+  }
+
+  async realDummyData() {
+    const arrData = [
+      {
+        "invoiceNumber" : 9,
+        "note" : "Dầu xả",
+        "createdUserId" : "5f3e2a488720931d906139bd",
+        "status" : "Open"
+      }, {
+        "invoiceNumber" : 9,
+        "note" : "Dầu xả",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e54",
+        "status" : "Open"
+      }, {
+        "invoiceNumber" : 9,
+        "note" : "Dầu xả",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e55",
+        "status" : "Open"
+      }, {
+        "invoiceNumber" : 9,
+        "note" : "Dầu xả",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e56",
+        "status" : "Open"
+      }, {
+        "invoiceNumber" : 9,
+        "note" : "Dầu xả",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e57",
+        "status" : "Open"
+      }, {
+        "invoiceNumber" : 9,
+        "note" : "Dầu xả",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e58",
+        "status" : "Open"
+      }, {
+        "invoiceNumber" : 9,
+        "note" : "Dầu xả",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e59",
+        "status" : "Open"
+      }, {
+        "invoiceNumber" : 9,
+        "note" : "Dầu xả",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e59",
+        "status" : "Open"
+      }, {
+        "invoiceNumber" : 9,
+        "note" : "Dầu xả",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e59",
+        "status" : "Open"
+      }, {
+        "invoiceNumber" : 9,
+        "note" : "Dầu xả",
+        "createdUserId" : "5f3e2b01aa5c8b2f64fb1e59",
+        "status" : "Open"
+      }
+    ];
+    let i = 0;
+    while(i<10) {
+      await this.model.insertMany(arrData, function(err) {
+        if(err) throw err;
+      });
+      i++;
+    }
+
+    return true;
+  };
 }

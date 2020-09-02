@@ -5,7 +5,7 @@ export interface ImportResponseInterface {
   invoiceDate?: number;
   note: string;
   createdUserId: string;
-  createdDate?: string;
+  createdDate?: number;
   accountantUserId: string;
   accConfirmedDate: number;
   stockKeeperUserId: string;

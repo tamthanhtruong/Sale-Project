@@ -43,10 +43,10 @@ export class DetailInventoryService {
     }
   }
 
-  async getAll(): Promise<DetailInventoryInterface[]> {
+  async getAll(): Promise<DetailInventoryResponseInterface[]> {
     try {
       // Find documents
-      return await this.model.find().exec();
+      return await this.model.find({ deletedAt: null }).exec();
     } catch(e) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
@@ -70,12 +70,95 @@ export class DetailInventoryService {
     }
   }
 
-  async getDetailInventory(inventoryId: string): Promise<DetailInventoryInterface[]> {
+  async getDetailInventory(inventoryId: string): Promise<DetailInventoryResponseInterface[]> {
     try {
       // Then find documents that same inventoryId
-      return await this.model.find({ inventoryId : inventoryId }).exec();
+      return await this.model.find({ inventoryId : inventoryId, deletedAt: null  }).exec();
     } catch(e) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
   }
+
+  async getAllSoftDelete(): Promise<DetailInventoryResponseInterface[]> {
+    try {
+      return await this.model.find({ deletedAt : { $ne: null } }).exec();
+    } catch (e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
+  }
+
+  async realDummyData() {
+    const arrData = [
+      {
+        "inventoryId" : "5f43dc815934e13b508f3c49",
+        "productId" : "5f3e08a73a3804451c193843",
+        "unitProductId" : "5f3e05167ec568307c95b70c",
+        "quantity" : 360,
+        "price" : 40003020
+      }, {
+        "inventoryId" : "5f43dc815934e13b508f3c4a",
+        "productId" : "5f3e08a73a3804451c193843",
+        "unitProductId" : "5f3e05167ec568307c95b70c",
+        "quantity" : 360,
+        "price" : 40003020
+      }, {
+        "inventoryId" : "5f43dc815934e13b508f3c4a",
+        "productId" : "5f3e08a73a3804451c193844",
+        "unitProductId" : "5f3e051b7ec568307c95b70d",
+        "quantity" : 360,
+        "price" : 40003020
+      }, {
+        "inventoryId" : "5f43dc815934e13b508f3c4b",
+        "productId" : "5f3e08a73a3804451c193844",
+        "unitProductId" : "5f3e051b7ec568307c95b70d",
+        "quantity" : 360,
+        "price" : 40003020
+      }, {
+        "inventoryId" : "5f43dc815934e13b508f3c4c",
+        "productId" : "5f3e08a73a3804451c193845",
+        "unitProductId" : "5f3e05267ec568307c95b70e",
+        "quantity" : 360,
+        "price" : 40003020
+      }, {
+        "inventoryId" : "5f43dc815934e13b508f3c4c",
+        "productId" : "5f3e08a73a3804451c193845",
+        "unitProductId" : "5f3e05267ec568307c95b70e",
+        "quantity" : 360,
+        "price" : 40003020
+      }, {
+        "inventoryId" : "5f43dc815934e13b508f3c4d",
+        "productId" : "5f3e08a73a3804451c193846",
+        "unitProductId" : "5f3e05387ec568307c95b70f",
+        "quantity" : 360,
+        "price" : 40003020
+      }, {
+        "inventoryId" : "5f43dc815934e13b508f3c4d",
+        "productId" : "5f3e08a73a3804451c193846",
+        "unitProductId" : "5f3e05387ec568307c95b70f",
+        "quantity" : 360,
+        "price" : 40003020
+      }, {
+        "inventoryId" : "5f43dc815934e13b508f3c4d",
+        "productId" : "5f3e08a73a3804451c193847",
+        "unitProductId" : "5f3e05417ec568307c95b710",
+        "quantity" : 360,
+        "price" : 40003020
+      }, {
+        "inventoryId" : "5f43dc815934e13b508f3c4d",
+        "productId" : "5f3e08a73a3804451c193847",
+        "unitProductId" : "5f3e05417ec568307c95b710",
+        "quantity" : 360,
+        "price" : 40003020
+      }
+    ];
+    let i = 0;
+    while(i<10) {
+      await this.model.insertMany(arrData, function(err) {
+        if(err) throw err;
+      });
+      i++;
+    }
+
+    return true;
+  };
 }

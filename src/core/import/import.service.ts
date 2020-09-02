@@ -28,8 +28,7 @@ export class ImportService {
   }
 
   /* Main functions */
-  async create(
-                shipper: string,
+  async create( shipper: string,
                 invoiceNumber: number,
                 note: string,
                 createdUserId: string,
@@ -37,7 +36,7 @@ export class ImportService {
                 accConfirmedDate: number,
                 stockKeeperUserId: string,
                 stockConfirmedDate: number,
-                status: string ) {
+                status: string ): Promise<ImportResponseInterface> {
 
     try {
       // Create new import document
@@ -48,10 +47,10 @@ export class ImportService {
     }
   }
 
-  async getAll(): Promise<ImportInterface[]> {
+  async getAll(): Promise<ImportResponseInterface[]> {
     try {
       // Find documents
-      return await this.model.find().exec();
+      return await this.model.find({ deletedAt: null }).exec();
     } catch(e) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
@@ -106,4 +105,127 @@ export class ImportService {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
   }
+
+  async getAllSoftDelete(): Promise<ImportResponseInterface[]> {
+    try {
+      return await this.model.find({ deletedAt : { $ne: null } }).exec();
+    } catch (e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
+  }
+
+  async realDummyData() {
+    const arrData = [{
+      "shipper" : "Nhật",
+      "invoiceNumber" : 2,
+      "note" : "Giao hàng",
+      "createdUserId" : "5f3e2a488720931d906139bd",
+      "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e54",
+      "accConfirmedDate" : 2020,
+      "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e55",
+      "stockConfirmedDate" : 2020,
+      "status" : "Lock"
+    },
+      {
+        "shipper" : "Nam",
+        "invoiceNumber" : 2,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2a488720931d906139bd",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e54",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e55",
+        "stockConfirmedDate" : 2020,
+        "status" : "Lock"
+      }, {
+        "shipper" : "Hòa",
+        "invoiceNumber" : 2,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2a488720931d906139bd",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e54",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e55",
+        "stockConfirmedDate" : 2020,
+        "status" : "Imported"
+      }, {
+        "shipper" : "Hải",
+        "invoiceNumber" : 2,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2a488720931d906139bd",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e54",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e55",
+        "stockConfirmedDate" : 2020,
+        "status" : "Imported"
+      }, {
+        "shipper" : "Tiến",
+        "invoiceNumber" : 2,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2a488720931d906139bd",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e54",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e55",
+        "stockConfirmedDate" : 2020,
+        "status" : "Imported"
+      }, {
+        "shipper" : "Kim",
+        "invoiceNumber" : 2,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2a488720931d906139bd",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e54",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e55",
+        "stockConfirmedDate" : 2020,
+        "status" : "Lock"
+      }, {
+        "shipper" : "Long",
+        "invoiceNumber" : 2,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2a488720931d906139bd",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e54",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e55",
+        "stockConfirmedDate" : 2020,
+        "status" : "Paid"
+      }, {
+        "shipper" : "Hùng",
+        "invoiceNumber" : 2,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2a488720931d906139bd",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e54",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e55",
+        "stockConfirmedDate" : 2020,
+        "status" : "Paid"
+      }, {
+        "shipper" : "Nhật",
+        "invoiceNumber" : 2,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2a488720931d906139bd",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e54",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e55",
+        "stockConfirmedDate" : 2020,
+        "status" : "Open"
+      }, {
+        "shipper" : "Nhật",
+        "invoiceNumber" : 2,
+        "note" : "Giao hàng",
+        "createdUserId" : "5f3e2a488720931d906139bd",
+        "accountantUserId" : "5f3e2b01aa5c8b2f64fb1e54",
+        "accConfirmedDate" : 2020,
+        "stockKeeperUserId" : "5f3e2b01aa5c8b2f64fb1e55",
+        "stockConfirmedDate" : 2020,
+        "status" : "Open"
+      }
+    ];
+    let i = 0;
+    while(i<10) {
+      await this.model.insertMany(arrData, function(err) {
+        if(err) throw err;
+      });
+      i++;
+    }
+
+    return true;
+  };
 }

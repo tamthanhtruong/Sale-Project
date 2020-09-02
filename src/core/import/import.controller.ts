@@ -6,7 +6,6 @@ import {
   ImportUpdateRequest,
 } from '../../interface/import/import.request';
 import { ImportResponseInterface } from '../../interface/import/import.response';
-import { ImportInterface } from './import.model';
 
 @Controller('import')
 export class ImportController {
@@ -26,7 +25,7 @@ export class ImportController {
   }
 
   @Get()
-  async getAll(): Promise<ImportInterface[]> {
+  async getAll(): Promise<ImportResponseInterface[]> {
     return await this.service.getAll();
   }
 
@@ -52,5 +51,15 @@ export class ImportController {
   @Delete(':id')
   async delete(@Param() req: ImportDeleteRequest): Promise<boolean> {
     return await this.service.delete(req.id);
+  }
+
+  @Get('get-all/soft-deleted')
+  async getAllSoftDelete(): Promise<ImportResponseInterface[]> {
+    return await this.service.getAllSoftDelete();
+  }
+
+  @Get('create/real-dummy-data')
+  async realDummyData() {
+    return await this.service.realDummyData();
   }
 }

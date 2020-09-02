@@ -25,7 +25,7 @@ export interface ExportInterface extends mongoose.Document {
   invoiceDate?: number;
   note: string;
   createdUserId: string;
-  createdDate?: string;
+  createdDate?: number;
   accountantUserId: string;
   accConfirmedDate: number;
   stockKeeperUserId: string;
@@ -35,6 +35,3 @@ export interface ExportInterface extends mongoose.Document {
   status: string;
   deletedAt?: number;
 }
-
-
-

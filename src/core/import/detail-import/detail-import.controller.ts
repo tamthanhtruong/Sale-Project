@@ -7,7 +7,6 @@ import {
   DetailImportGetSingleRequest,
 } from '../../../interface/import/detail-import/detail-import.request';
 import { DetailImportResponseInterface } from '../../../interface/import/detail-import/detail-import.response';
-import { DetailImportInterface } from './detail-import.model';
 
 @Controller('detail-import')
 export class DetailImportController {
@@ -20,12 +19,12 @@ export class DetailImportController {
   }
 
   @Get()
-  async getAll(): Promise<DetailImportInterface[]> {
+  async getAll(): Promise<DetailImportResponseInterface[]> {
     return await this.service.getAll();
   }
 
   @Get(':id')
-  async getSingle(@Param() req: DetailImportGetSingleRequest) {
+  async getSingle(@Param() req: DetailImportGetSingleRequest): Promise<DetailImportResponseInterface> {
       return await this.service.getSingle(req.id);
   }
 
@@ -35,7 +34,17 @@ export class DetailImportController {
   }
 
   @Get('getDetailImport/:id')
-  async getDetailImport(@Param() req: DetailImportGetDetailImportRequest): Promise<DetailImportInterface[]>  {
+  async getDetailImport(@Param() req: DetailImportGetDetailImportRequest): Promise<DetailImportResponseInterface[]>  {
     return await this.service.getDetailImport(req.id);
+  }
+
+  @Get('get-all/soft-deleted')
+  async getAllSoftDelete(): Promise<DetailImportResponseInterface[]> {
+    return await this.service.getAllSoftDelete();
+  }
+
+  @Get('create/real-dummy-data')
+  async realDummyData() {
+    return await this.service.realDummyData();
   }
 }

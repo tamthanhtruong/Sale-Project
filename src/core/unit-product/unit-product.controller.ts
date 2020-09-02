@@ -33,4 +33,9 @@ export class UnitProductController {
   async delete(@Param() req: UnitProductDeleteRequest): Promise<boolean> {
       return await this.service.delete(req.id);
   }
+
+  @Get('get-all/soft-deleted')
+  async getAllSoftDelete(): Promise<UnitProductResponseInterface[]> {
+    return await this.service.getAllSoftDelete();
+  }
 }

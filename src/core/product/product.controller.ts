@@ -61,4 +61,14 @@ export class ProductController {
   async delete(@Param() req: ProductDeleteRequest): Promise<boolean> {
     return await this.service.delete(req.id);
   }
+
+  @Get('get-all/soft-deleted')
+  async getAllSoftDelete(): Promise<ProductResponseInterface[]> {
+    return await this.service.getAllSoftDelete();
+  }
+
+  @Get('create/real-dummy-data')
+  async realDummyData() {
+    return await this.service.realDummyData();
+  }
 }

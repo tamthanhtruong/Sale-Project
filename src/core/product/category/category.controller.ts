@@ -5,7 +5,6 @@ import {
   CategoryGetSingleRequest,
   CategoryUpdateRequest,
 } from '../../../interface/product/category/category.request';
-import { CategoryInterface } from './category.model';
 import { CategoryResponseInterface } from '../../../interface/product/category/category.response';
 
 @Controller('category')
@@ -18,7 +17,7 @@ export class CategoryController {
   }
 
   @Get()
-  async getAll(): Promise<CategoryInterface[]> {
+  async getAll(): Promise<CategoryResponseInterface[]> {
     return await this.service.getAll();
   }
 
@@ -35,5 +34,10 @@ export class CategoryController {
   @Delete(':id')
   async delete(@Param() req: CategoryDeleteRequest): Promise<boolean> {
     return await this.service.delete(req.id);
+  }
+
+  @Get('get-all/soft-deleted')
+  async getAllSoftDelete(): Promise<CategoryResponseInterface[]> {
+    return await this.service.getAllSoftDelete();
   }
 }

@@ -7,52 +7,62 @@ import {
   UserUpdateRequest,
 } from '../../interface/user/user.request';
 import { UserResponseInterface } from '../../interface/user/user.response';
-import { UserInterface } from './user.model';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly service: UserService) {}
 
   @Post()
   async create(@Body() req: UserCreateRequest): Promise<UserResponseInterface> {
-    return await this.userService.create( req.roleId,
-                                          req.account,
-                                          req.password,
-                                          req.name,
-                                          req.sex,
-                                          req.email,
-                                          req.dateOfBirth,
-                                          req.address,
-                                          req.phone,
-                                          req.status);
+    return await this.service.create( req.roleId,
+                                      req.account,
+                                      req.password,
+                                      req.name,
+                                      req.sex,
+                                      req.email,
+                                      req.dateOfBirth,
+                                      req.address,
+                                      req.phone,
+                                      req.status);
   }
 
   @Get()
-  async getAll(): Promise<UserInterface[]> {
-    return await this.userService.getAll();
+  async getAll(): Promise<UserResponseInterface[]> {
+    return await this.service.getAll();
   }
 
   @Get(':id')
   async getSingle(@Param() req: UserGetSingleRequest): Promise<UserResponseInterface> {
-      return await this.userService.getSingle(req.id);
+      return await this.service.getSingle(req.id);
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() req: UserUpdateRequest): Promise<UserResponseInterface> {
-    return await this.userService.update( id,
-                                          req.roleId,
-                                          req.account,
-                                          req.password,
-                                          req.name,
-                                          req.sex,
-                                          req.email,
-                                          req.dateOfBirth,
-                                          req.address,
-                                          req.phone,
-                                          req.status);}
+    return await this.service.update( id,
+                                      req.roleId,
+                                      req.account,
+                                      req.password,
+                                      req.name,
+                                      req.sex,
+                                      req.email,
+                                      req.dateOfBirth,
+                                      req.address,
+                                      req.phone,
+                                      req.status);
+  }
 
   @Delete(':id')
   async delete(@Param() req: UserDeleteRequest): Promise<boolean> {
-    return await this.userService.delete(req.id);
+    return await this.service.delete(req.id);
+  }
+
+  @Get('get-all/soft-deleted')
+  async getAllSoftDelete(): Promise<UserResponseInterface[]> {
+    return await this.service.getAllSoftDelete();
+  }
+
+  @Get('create/real-dummy-data')
+  async realDummyData() {
+    return await this.service.realDummyData();
   }
 }

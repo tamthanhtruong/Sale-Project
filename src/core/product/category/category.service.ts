@@ -7,7 +7,7 @@ import { CategoryResponseInterface } from '../../../interface/product/category/c
 @Injectable()
 export class CategoryService {
 
-  constructor(@InjectModel('Category') private readonly model: Model<CategoryInterface>,) {}
+  constructor(@InjectModel('categories') private readonly model: Model<CategoryInterface>,) {}
 
   /* Additional functions */
   async findCategory(id: string): Promise<CategoryInterface> {
@@ -38,10 +38,10 @@ export class CategoryService {
     }
   }
 
-  async getAll(): Promise<CategoryInterface[]> {
+  async getAll(): Promise<CategoryResponseInterface[]> {
     try {
       // Find documents
-      return await this.model.find().exec();
+      return await this.model.find({ deletedAt: null }).exec();
     } catch(e) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
@@ -76,6 +76,14 @@ export class CategoryService {
       await category.save();
       return true;
     } catch(e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
+  }
+
+  async getAllSoftDelete(): Promise<CategoryResponseInterface[]> {
+    try {
+      return await this.model.find({ deletedAt : { $ne: null } }).exec();
+    } catch (e) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
   }

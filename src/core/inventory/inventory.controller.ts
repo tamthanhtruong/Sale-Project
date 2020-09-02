@@ -5,7 +5,6 @@ import {
   InventoryUpdateRequest,
 } from '../../interface/inventory/inventory.request';
 import { InventoryResponseInterface } from '../../interface/inventory/inventory.response';
-import { InventoryInterface } from './inventory.model';
 import { InventoryService } from './inventory.service';
 
 @Controller('inventory')
@@ -19,7 +18,7 @@ export class InventoryController {
   }
 
   @Get()
-  async getAll(): Promise<InventoryInterface[]> {
+  async getAll(): Promise<InventoryResponseInterface[]> {
     return await this.service.getAll();
   }
 
@@ -36,5 +35,15 @@ export class InventoryController {
   @Delete(':id')
   async delete(@Param() req: InventoryDeleteRequest): Promise<boolean> {
     return await this.service.delete(req.id);
+  }
+
+  @Get('get-all/soft-deleted')
+  async getAllSoftDelete(): Promise<InventoryResponseInterface[]> {
+    return await this.service.getAllSoftDelete();
+  }
+
+  @Get('create/real-dummy-data')
+  async realDummyData() {
+    return await this.service.realDummyData();
   }
 }

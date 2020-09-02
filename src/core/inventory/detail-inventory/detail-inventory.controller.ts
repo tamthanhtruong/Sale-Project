@@ -1,5 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { DetailInventoryInterface } from './detail-inventory.model';
 import {
   DetailInventoryCreateRequest,
   DetailInventoryDeleteRequest,
@@ -19,12 +18,12 @@ export class DetailInventoryController {
   }
 
   @Get()
-  async getAll(): Promise<DetailInventoryInterface[]> {
+  async getAll(): Promise<DetailInventoryResponseInterface[]> {
     return await this.service.getAll();
   }
 
   @Get(':id')
-  async getSingle(@Param() req: DetailInventoryGetSingleRequest) {
+  async getSingle(@Param() req: DetailInventoryGetSingleRequest): Promise<DetailInventoryResponseInterface> {
       return await this.service.getSingle(req.id);
   }
 
@@ -34,7 +33,17 @@ export class DetailInventoryController {
   }
 
   @Get('getDetailInventory/:id')
-  async getDetailInventory(@Param() req: DetailInventoryGetDetailInventoryRequest): Promise<DetailInventoryInterface[]> {
+  async getDetailInventory(@Param() req: DetailInventoryGetDetailInventoryRequest): Promise<DetailInventoryResponseInterface[]> {
     return await this.service.getDetailInventory(req.id);
+  }
+
+  @Get('get-all/soft-deleted')
+  async getAllSoftDelete(): Promise<DetailInventoryResponseInterface[]> {
+    return await this.service.getAllSoftDelete();
+  }
+
+  @Get('create/real-dummy-data')
+  async realDummyData() {
+    return await this.service.realDummyData();
   }
 }

@@ -47,9 +47,9 @@ import { IdDetailInventoryExist } from '../validators/detail-inventory.validator
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{name: 'Product', schema: ProductSchema}]),
-    MongooseModule.forFeature([{name: 'Category', schema: CategorySchema}]),
-    MongooseModule.forFeature([{name: 'Unit-Product', schema: UnitProductSchema}]),
+    MongooseModule.forFeature([{name: 'products', schema: ProductSchema}]),
+    MongooseModule.forFeature([{name: 'categories', schema: CategorySchema}]),
+    MongooseModule.forFeature([{name: 'unit-products', schema: UnitProductSchema}]),
     MongooseModule.forFeature([{name: 'users', schema: UserSchema}]),
     MongooseModule.forFeature([{name: 'roles', schema: RoleSchema}]),
     MongooseModule.forFeature([{name: 'imports', schema: ImportSchema}]),

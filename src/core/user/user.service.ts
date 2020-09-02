@@ -47,10 +47,10 @@ export class UserService {
     }
   }
 
-  async getAll(): Promise<UserInterface[]> {
+  async getAll(): Promise<UserResponseInterface[]> {
     try {
       // Find documents
-      return await this.model.find().exec();
+      return await this.model.find({ deletedAt: null }).exec();
     } catch(e) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
@@ -108,4 +108,135 @@ export class UserService {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
     }
   }
+
+  async getAllSoftDelete(): Promise<UserResponseInterface[]> {
+    try {
+      return await this.model.find({ deletedAt : { $ne: null } }).exec();
+    } catch (e) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);//403
+    }
+  }
+
+  async realDummyData() {
+    const arrData = [{
+      "roleId" : "5f3a2d6e965c4f207897009a",
+      "account": "loi123",
+      "password": "987",
+      "name": "Tài Lợi",
+      "sex" : "Male",
+      "email" : "linh@gmail.com",
+      "dateOfBirth" : "1/1/1990",
+      "address" : "Bình Thủy",
+      "phone" : "123456",
+      "status": "Inactive"
+    },{
+      "roleId" : "5f3a2d6e965c4f207897009a",
+      "account": "loi123",
+      "password": "987",
+      "name": "Tài Lợi",
+      "sex" : "Male",
+      "email" : "linh@gmail.com",
+      "dateOfBirth" : "1/1/1990",
+      "address" : "Bình Thủy",
+      "phone" : "123456",
+      "status": "Inactive"
+    }, {
+      "roleId" : "5f3953380af83c1da4a5fc68",
+      "account": "loi123",
+      "password": "987",
+      "name": "Tài Lợi",
+      "sex" : "Male",
+      "email" : "linh@gmail.com",
+      "dateOfBirth" : "1/1/1990",
+      "address" : "Bình Thủy",
+      "phone" : "123456",
+      "status": "Inactive"
+    }, {
+      "roleId" : "5f3953380af83c1da4a5fc68",
+      "account": "loi123",
+      "password": "987",
+      "name": "Tài Lợi",
+      "sex" : "Male",
+      "email" : "linh@gmail.com",
+      "dateOfBirth" : "1/1/1990",
+      "address" : "Bình Thủy",
+      "phone" : "123456",
+      "status": "Inactive"
+    }, {
+      "roleId" : "5f3953420af83c1da4a5fc69",
+      "account": "loi123",
+      "password": "987",
+      "name": "Tài Lợi",
+      "sex" : "Male",
+      "email" : "linh@gmail.com",
+      "dateOfBirth" : "1/1/1990",
+      "address" : "Bình Thủy",
+      "phone" : "123456",
+      "status": "Inactive"
+    }, {
+      "roleId" : "5f3953420af83c1da4a5fc69",
+      "account": "loi123",
+      "password": "987",
+      "name": "Tài Lợi",
+      "sex" : "Male",
+      "email" : "linh@gmail.com",
+      "dateOfBirth" : "1/1/1990",
+      "address" : "Bình Thủy",
+      "phone" : "123456",
+      "status": "Inactive"
+    }, {
+      "roleId" : "5f3953a5755024303410e0aa",
+      "account": "loi123",
+      "password": "987",
+      "name": "Tài Lợi",
+      "sex" : "Male",
+      "email" : "linh@gmail.com",
+      "dateOfBirth" : "1/1/1990",
+      "address" : "Bình Thủy",
+      "phone" : "123456",
+      "status": "Active"
+    }, {
+      "roleId" : "5f3953a5755024303410e0aa",
+      "account": "loi123",
+      "password": "987",
+      "name": "Tài Lợi",
+      "sex" : "Male",
+      "email" : "linh@gmail.com",
+      "dateOfBirth" : "1/1/1990",
+      "address" : "Bình Thủy",
+      "phone" : "123456",
+      "status": "Active"
+    }, {
+      "roleId" : "5f3953b2755024303410e0ab",
+      "account": "loi123",
+      "password": "987",
+      "name": "Tài Lợi",
+      "sex" : "Male",
+      "email" : "linh@gmail.com",
+      "dateOfBirth" : "1/1/1990",
+      "address" : "Bình Thủy",
+      "phone" : "123456",
+      "status": "Inactive"
+    }, {
+      "roleId" : "5f3953b2755024303410e0ab",
+      "account": "loi123",
+      "password": "987",
+      "name": "Tài Lợi",
+      "sex" : "Male",
+      "email" : "linh@gmail.com",
+      "dateOfBirth" : "1/1/1990",
+      "address" : "Bình Thủy",
+      "phone" : "123456",
+      "status": "Active"
+    }];
+    let i = 0;
+    while(i<100) {
+      await this.model.insertMany(arrData, function(err) {
+        if(err) throw err;
+      });
+      i++;
+    }
+
+    return true;
+  };
 }

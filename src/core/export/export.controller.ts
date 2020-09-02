@@ -6,7 +6,6 @@ import {
 } from '../../interface/export/export.request';
 import { ExportResponseInterface } from '../../interface/export/export.response';
 import { ExportService } from './export.service';
-import { ExportInterface } from './export.model';
 
 @Controller('export')
 export class ExportController {
@@ -26,7 +25,7 @@ export class ExportController {
   }
 
   @Get()
-  async getAll(): Promise<ExportInterface[]> {
+  async getAll(): Promise<ExportResponseInterface[]> {
     return await this.service.getAll();
   }
 
@@ -52,5 +51,15 @@ export class ExportController {
   @Delete(':id')
   async delete(@Param() req: ExportDeleteRequest): Promise<boolean> {
     return await this.service.delete(req.id);
+  }
+
+  @Get('get-all/soft-deleted')
+  async getAllSoftDelete(): Promise<ExportResponseInterface[]> {
+    return await this.service.getAllSoftDelete();
+  }
+
+  @Get('create/real-dummy-data')
+  async realDummyData() {
+    return await this.service.realDummyData();
   }
 }
