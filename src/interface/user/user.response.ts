@@ -1,6 +1,6 @@
 export interface UserResponseInterface {
   readonly _id: string;
-  roleId: string,
+  roleId: string;
   account: string;
   password: string;
   name: string;
